@@ -17,7 +17,7 @@ private:
 	struct StackData
 	{
 		int var;
-		std::vector<int> clause_id;
+		std::vector<int> removed_clause_id;
 		bool varVal;
 		bool swapped;
 

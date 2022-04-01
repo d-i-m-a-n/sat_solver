@@ -19,14 +19,15 @@ private:
 	{
 		int var;
 		// номера удаленных дизъюнктов
-		std::vector<int> clause_id;
-		std::vector<int> clauses0_id;
-		std::vector<int> clauses1_id;
+		std::vector<int> removed_clause_id;
+		// номера дизъюнктов из которых удалены некоторые переменные
+		std::vector<int> vars_removed_from_clausesM0_id;
+		std::vector<int> vars_removed_from_clausesM1_id;
 		bool varVal;
 		bool swapped;
 		// храним обнуленные переменные из дизъюнктов
-		std::map<int, std::vector<int>> clauses0;
-		std::map<int, std::vector<int>> clauses1;
+		std::map<int, std::vector<int>> vars_in_clausesM0;
+		std::map<int, std::vector<int>> vars_in_clausesM1;
 		// переменные, зафиксированные на текущем этапе
 		BoolVector V1;
 		BoolVector V0;
@@ -48,7 +49,7 @@ private:
 	std::stack<StackData> S;
 
 	// дизъюнкты с одной оставшейся переменной
-	std::vector<int> clause_weight1;
+	std::vector<int> clause_weight1_id;
 	// представление матрицы
 	BoolMatrix bufM1;
 	BoolMatrix bufM0;
@@ -59,9 +60,10 @@ private:
 	// зафиксированные переменные
 	BoolVector V0;
 	BoolVector V1;
+
 	// переменные, находящиеся в i-тых дизъюнктах
-	std::vector<std::vector<int>> clauses0;
-	std::vector<std::vector<int>> clauses1;
+	std::vector<std::vector<int>> vars_in_clausesM0;
+	std::vector<std::vector<int>> vars_in_clausesM1;
 	// текущий вес строк/столбцов
 	std::vector<int> weightOfRows;
 	std::vector<int> weightOfColumnsM0;

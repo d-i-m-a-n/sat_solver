@@ -20,50 +20,50 @@ bool DPLLsolver_var2::backTrackAlg()
 	while (true)
 	{
 		StackData& stack_top = S.top();
-		for (auto& id : stack_top.clause_id)
+		for (auto& id : stack_top.removed_clause_id)
 		{
 			M1.insertRow(bufM1.extractRow(id), id);
 			M0.insertRow(bufM0.extractRow(id), id);
 
-			for (int j = 0; j < clauses1[id].size() || j < clauses0[id].size(); j++)
+			for (int j = 0; j < vars_in_clausesM1[id].size() || j < vars_in_clausesM0[id].size(); j++)
 			{
-				if (j < clauses1[id].size())
-					weightOfColumnsM1[clauses1[id][j]]++;
-				if (j < clauses0[id].size())
-					weightOfColumnsM0[clauses0[id][j]]++;
+				if (j < vars_in_clausesM1[id].size())
+					weightOfColumnsM1[vars_in_clausesM1[id][j]]++;
+				if (j < vars_in_clausesM0[id].size())
+					weightOfColumnsM0[vars_in_clausesM0[id][j]]++;
 			}
 
 		}
 		
 		// переносим переменные обратно в дизъюнкты и увеличиваем веса
-		for (auto id = stack_top.clauses0_id.begin(); id != stack_top.clauses0_id.end(); id++)
+		for (auto id = stack_top.vars_removed_from_clausesM0_id.begin(); id != stack_top.vars_removed_from_clausesM0_id.end(); id++)
 		{
-			for (auto var = stack_top.clauses0[*id].begin(); var != stack_top.clauses0[*id].end(); var++)
+			for (auto var = stack_top.vars_in_clausesM0[*id].begin(); var != stack_top.vars_in_clausesM0[*id].end(); var++)
 			{
 				weightOfRows[*id]++;
 				weightOfColumnsM0[*var]++;
-				clauses0[*id].push_back(*var);
+				vars_in_clausesM0[*id].push_back(*var);
 			}
-			stack_top.clauses0[*id].clear();
+			stack_top.vars_in_clausesM0[*id].clear();
 		}
 		
-		for (auto id = stack_top.clauses1_id.begin(); id != stack_top.clauses1_id.end(); id++)
+		for (auto id = stack_top.vars_removed_from_clausesM1_id.begin(); id != stack_top.vars_removed_from_clausesM1_id.end(); id++)
 		{
-			for (auto var = stack_top.clauses1[*id].begin(); var != stack_top.clauses1[*id].end(); var++)
+			for (auto var = stack_top.vars_in_clausesM1[*id].begin(); var != stack_top.vars_in_clausesM1[*id].end(); var++)
 			{
 				weightOfRows[*id]++;
 				weightOfColumnsM1[*var]++;
-				clauses1[*id].push_back(*var);
+				vars_in_clausesM1[*id].push_back(*var);
 			}
-			stack_top.clauses1[*id].clear();
+			stack_top.vars_in_clausesM1[*id].clear();
 		}
 
-		stack_top.clause_id.clear();
-		stack_top.clauses0_id.clear();
-		stack_top.clauses1_id.clear();
-		stack_top.clauses0.clear();
-		stack_top.clauses1.clear();
-		clause_weight1.clear();
+		stack_top.removed_clause_id.clear();
+		stack_top.vars_removed_from_clausesM0_id.clear();
+		stack_top.vars_removed_from_clausesM1_id.clear();
+		stack_top.vars_in_clausesM0.clear();
+		stack_top.vars_in_clausesM1.clear();
+		clause_weight1_id.clear();
 
 		V1 &= ~stack_top.V1;
 		V0 &= ~stack_top.V0;
@@ -108,8 +108,8 @@ void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 	in >> varCount;
 	in >> clauseCount;
 
-	clauses0.resize(clauseCount);
-	clauses1.resize(clauseCount);
+	vars_in_clausesM0.resize(clauseCount);
+	vars_in_clausesM1.resize(clauseCount);
 	M0.resize(clauseCount, varCount);
 	M1.resize(clauseCount, varCount);
 	bufM1.resize(clauseCount);
@@ -122,7 +122,7 @@ void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 	weightOfColumnsM1.resize(varCount, 0);
 	weightOfRows.clear();
 	weightOfRows.resize(clauseCount, 0);
-	clause_weight1.clear();
+	clause_weight1_id.clear();
 	
 	result.resize(varCount);
 
@@ -131,8 +131,8 @@ void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 
 	for (int i = 0; i < clauseCount; i++)
 	{
-		clauses0[i].resize(0);
-		clauses1[i].resize(0);
+		vars_in_clausesM0[i].resize(0);
+		vars_in_clausesM1[i].resize(0);
 		int var;
 		in >> var;
 		while (var)
@@ -141,13 +141,13 @@ void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 			if (var > 0)
 			{
 				(*M1[i])[var - 1] = 1;
-				clauses1[i].push_back(var - 1);
+				vars_in_clausesM1[i].push_back(var - 1);
 				weightOfColumnsM1[var - 1]++;
 			}
 			else
 			{
 				(*M0[i])[var * (-1) - 1] = 1;
-				clauses0[i].push_back(var * (-1) - 1);
+				vars_in_clausesM0[i].push_back(var * (-1) - 1);
 				weightOfColumnsM0[var * (-1) - 1]++;
 			}
 			in >> var;
@@ -199,48 +199,48 @@ bool DPLLsolver_var2::deduceAlg()
 	// проверяем дизъюнкты в которых осталась 1 переменная
 
 	// нужно зафиксировать переменные для всех дизъюнктов из вектора
-	for (auto iter = clause_weight1.begin(); iter != clause_weight1.end();)
+	for (auto iter = clause_weight1_id.begin(); iter != clause_weight1_id.end();)
 	{
 		int cur_clause = *iter;
 
-		if (!clauses0[cur_clause].empty())
+		if (!vars_in_clausesM0[cur_clause].empty())
 		{
 			// проверка конфликта
-			for (auto iter2 = iter + 1; iter2 != clause_weight1.end(); )
+			for (auto iter2 = iter + 1; iter2 != clause_weight1_id.end(); )
 			{
-				if (!clauses1[*iter2].empty() && clauses0[cur_clause][0] == clauses1[*iter2][0])
+				if (!vars_in_clausesM1[*iter2].empty() && vars_in_clausesM0[cur_clause][0] == vars_in_clausesM1[*iter2][0])
 				{
 					return true;
 				}
 
-				if (iter != iter2 && !clauses0[*iter2].empty() && clauses0[cur_clause][0] == clauses0[*iter2][0])
-					iter2 = clause_weight1.erase(iter2);
+				if (iter != iter2 && !vars_in_clausesM0[*iter2].empty() && vars_in_clausesM0[cur_clause][0] == vars_in_clausesM0[*iter2][0])
+					iter2 = clause_weight1_id.erase(iter2);
 				else
 					iter2++;
 			}
-			setVarVal(clauses0[cur_clause][0], false);
+			setVarVal(vars_in_clausesM0[cur_clause][0], false);
 		}
 
-		if (!clauses1[cur_clause].empty())
+		if (!vars_in_clausesM1[cur_clause].empty())
 		{
 			// проверка конфликта
-			for (auto iter2 = iter + 1; iter2 != clause_weight1.end();)
+			for (auto iter2 = iter + 1; iter2 != clause_weight1_id.end();)
 			{
-				if (!clauses0[*iter2].empty() && clauses1[cur_clause][0] == clauses0[*iter2][0])
+				if (!vars_in_clausesM0[*iter2].empty() && vars_in_clausesM1[cur_clause][0] == vars_in_clausesM0[*iter2][0])
 				{
 					return true;
 				}
 
-				if (iter != iter2 && !clauses1[*iter2].empty() && clauses1[cur_clause][0] == clauses1[*iter2][0])
-					iter2 = clause_weight1.erase(iter2);
+				if (iter != iter2 && !vars_in_clausesM1[*iter2].empty() && vars_in_clausesM1[cur_clause][0] == vars_in_clausesM1[*iter2][0])
+					iter2 = clause_weight1_id.erase(iter2);
 				else
 					iter2++;
 			}
-			setVarVal(clauses1[cur_clause][0], true);
+			setVarVal(vars_in_clausesM1[cur_clause][0], true);
 		}
 
-		iter = clause_weight1.begin();
-		iter = clause_weight1.erase(iter);
+		iter = clause_weight1_id.begin();
+		iter = clause_weight1_id.erase(iter);
 	}
 	return false;
 }
@@ -259,37 +259,37 @@ void DPLLsolver_var2::setVarVal(int var, bool varVal)
 			// ищем дизъюнкты, которые стали равны 1 и их нужно убрать
 			if (M1[i] && (*M1[i])[var])
 			{
-				stack_top.clause_id.push_back(i);
+				stack_top.removed_clause_id.push_back(i);
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
 				// уменьшаем вес столбцов, убирая переменные которые находились в удаляемых дизъюнктах
-				for (int j = 0; j < clauses1[i].size() || j < clauses0[i].size(); j++)
+				for (int j = 0; j < vars_in_clausesM1[i].size() || j < vars_in_clausesM0[i].size(); j++)
 				{
-					if (j < clauses1[i].size())
-						weightOfColumnsM1[clauses1[i][j]]--;
-					if (j < clauses0[i].size())
-						weightOfColumnsM0[clauses0[i][j]]--;
+					if (j < vars_in_clausesM1[i].size())
+						weightOfColumnsM1[vars_in_clausesM1[i][j]]--;
+					if (j < vars_in_clausesM0[i].size())
+						weightOfColumnsM0[vars_in_clausesM0[i][j]]--;
 				}
 			}
 			// убираем переменные из дизъюнктов в противоположной матрице, т.к. они равны 0
 			if (M0[i] && (*M0[i])[var])
 			{
 				weightOfColumnsM0[var]--;
-				stack_top.clauses0[i].push_back(var);
-				stack_top.clauses0_id.push_back(i);
+				stack_top.vars_in_clausesM0[i].push_back(var);
+				stack_top.vars_removed_from_clausesM0_id.push_back(i);
 				// переносим переменные из дизъюнктов в стэк
-				for (auto iter = clauses0[i].begin(); iter != clauses0[i].end(); iter++)
+				for (auto iter = vars_in_clausesM0[i].begin(); iter != vars_in_clausesM0[i].end(); iter++)
 				{
 					if (*iter == var)
 					{
-						clauses0[i].erase(iter);
+						vars_in_clausesM0[i].erase(iter);
 						break;
 					}
 				}
 				// уменьшаем веса строк и проверяем не стал ли вес равен 1
 				weightOfRows[i]--;
 				if (weightOfRows[i] == 1)
-					clause_weight1.push_back(i);
+					clause_weight1_id.push_back(i);
 			}
 		}
 	}
@@ -302,34 +302,34 @@ void DPLLsolver_var2::setVarVal(int var, bool varVal)
 		{
 			if (M0[i] && (*M0[i])[var])
 			{
-				stack_top.clause_id.push_back(i);
+				stack_top.removed_clause_id.push_back(i);
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
-				for (int j = 0; j < clauses1[i].size() || j < clauses0[i].size(); j++)
+				for (int j = 0; j < vars_in_clausesM1[i].size() || j < vars_in_clausesM0[i].size(); j++)
 				{
-					if (j < clauses1[i].size())
-						weightOfColumnsM1[clauses1[i][j]]--;
-					if (j < clauses0[i].size())
-						weightOfColumnsM0[clauses0[i][j]]--;
+					if (j < vars_in_clausesM1[i].size())
+						weightOfColumnsM1[vars_in_clausesM1[i][j]]--;
+					if (j < vars_in_clausesM0[i].size())
+						weightOfColumnsM0[vars_in_clausesM0[i][j]]--;
 				}
 			}
 
 			if (M1[i] && (*M1[i])[var])
 			{
 				weightOfColumnsM1[var]--;
-				stack_top.clauses1[i].push_back(var);
-				stack_top.clauses1_id.push_back(i);
-				for (auto iter = clauses1[i].begin(); iter != clauses1[i].end(); iter++)
+				stack_top.vars_in_clausesM1[i].push_back(var);
+				stack_top.vars_removed_from_clausesM1_id.push_back(i);
+				for (auto iter = vars_in_clausesM1[i].begin(); iter != vars_in_clausesM1[i].end(); iter++)
 				{
 					if (*iter == var)
 					{
-						clauses1[i].erase(iter);
+						vars_in_clausesM1[i].erase(iter);
 						break;
 					}
 				}
 				weightOfRows[i]--;
 				if (weightOfRows[i] == 1)
-					clause_weight1.push_back(i);
+					clause_weight1_id.push_back(i);
 			}
 		}
 	}

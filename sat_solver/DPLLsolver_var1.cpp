@@ -1,13 +1,6 @@
 #include "DPLLsolver_var1.h"
 #include <fstream>
 
-/*
-* TODO:
-* восстановить векторы V1 V0 при возврате (done)
-* в deduce надо добавлять в векторы в стеке информацию об зафиксированных переменных(done)
-* добавить выбор перемнной из M0
-*/
-
 // М0 - переменные с инверсией, М1 - без инверсии
 void DPLLsolver_var1::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 {
@@ -67,7 +60,7 @@ bool DPLLsolver_var1::backTrackAlg()
 	while (true)
 	{
 		StackData& stack_top = S.top();
-		for (auto& id : stack_top.clause_id)
+		for (auto& id : stack_top.removed_clause_id)
 		{
 			/*
 			* перенос дизъюнктов из буфера обратно в матрицы
@@ -75,7 +68,7 @@ bool DPLLsolver_var1::backTrackAlg()
 			M1.insertRow(bufM1.extractRow(id), id);
 			M0.insertRow(bufM0.extractRow(id), id);
 		}
-		stack_top.clause_id.clear();
+		stack_top.removed_clause_id.clear();
 		
 		V1 &= ~stack_top.V1;
 		V0 &= ~stack_top.V0;
@@ -121,7 +114,7 @@ bool DPLLsolver_var1::backTrackAlg()
 			{
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
-				S.top().clause_id.push_back(i);
+				S.top().removed_clause_id.push_back(i);
 			}
 		}
 	}
@@ -133,7 +126,7 @@ bool DPLLsolver_var1::backTrackAlg()
 			{
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
-				S.top().clause_id.push_back(i);
+				S.top().removed_clause_id.push_back(i);
 			}
 		}
 	}
@@ -202,7 +195,7 @@ bool DPLLsolver_var1::chooseVarAlg()
 			{
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
-				stack_top.clause_id.push_back(i);
+				stack_top.removed_clause_id.push_back(i);
 			}
 		}
 	}
@@ -217,7 +210,7 @@ bool DPLLsolver_var1::chooseVarAlg()
 			{
 				bufM1.insertRow(M1.extractRow(i), i);
 				bufM0.insertRow(M0.extractRow(i), i);
-				stack_top.clause_id.push_back(i);
+				stack_top.removed_clause_id.push_back(i);
 			}
 		}
 	}
@@ -274,7 +267,7 @@ bool DPLLsolver_var1::deduceM1(BoolMatrix& M1_, BoolMatrix& bufM1_, BoolVector& 
 						*/
 						bufM1_.insertRow(M1_.extractRow(j), j);
 						bufM0_.insertRow(M0_.extractRow(j), j);
-						S.top().clause_id.push_back(j);
+						S.top().removed_clause_id.push_back(j);
 					}
 				}
 				V1_ |= bufV1;
