@@ -5,11 +5,14 @@
 #include <filesystem>
 
 #include "DPLLsolver.h"
-#include "DPLLsolver_var2.h"
-#include "DPLLsolver_var1.h"
 
+#include "DPLLsolver_greed_var1.h"
+#include "DPLLsolver_rand_var1.h"
 
-void run_test(DPLLsolver* solver, std::filesystem::path& test_dir_path, std::string& out_file_name, bool SAT)
+#include "DPLLsolver_greed_var2.h"
+#include "DPLLsolver_rand_var2.h"
+
+void run_test(DPLLsolver* solver, std::filesystem::path& test_dir_path, std::string&& out_file_name, bool SAT)
 {
 	bool allSAT;
 	int counter = 0;
@@ -61,12 +64,25 @@ int main()
 	std::string sat_tests_out("./TESTS_RESULT/SAT_TESTS_WITH_RANK2.txt");
 	std::string unsat_tests_out("./TESTS_RESULT/UNSAT_TESTS_WITH_RANK2.txt");
 
-	DPLLsolver_var1 solver_var1;
-	DPLLsolver_var2 solver_var2;
-
-	run_test(&solver_var2, sat_tests_dp, sat_tests_out, true);
-	//run_test(&solver_var2, unsat_tests_dp, unsat_tests_out, false);
-
-
+	{
+		DPLLsolver_rand_var2 solver_rand_var2;
+		run_test(&solver_rand_var2, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_rand_var2.txt", true);
+		//run_test(&solver_rand_var2, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_rand_var2.txt", false);
+	}
+	/*{
+		DPLLsolver_greed_var2 solver_greed_var2;
+		run_test(&solver_greed_var2, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_greed_var2.txt", true);
+		run_test(&solver_greed_var2, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_greed_var2.txt", false);
+	}*/
+	//{
+	//	DPLLsolver_greed_var1 solver_greed_var1;
+	//	//run_test(&solver_greed_var1, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_greed_var1.txt", true);
+	//	run_test(&solver_greed_var1, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_greed_var1.txt", false);
+	//}
+	//{
+	//	DPLLsolver_rand_var1 solver_rand_var1;
+	//	run_test(&solver_rand_var1, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_rand_var1.txt", true);
+	//	run_test(&solver_rand_var1, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_rand_var1.txt", false);
+	//}
 	return 0;
 }

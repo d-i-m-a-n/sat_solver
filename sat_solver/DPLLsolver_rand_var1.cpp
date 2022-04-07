@@ -1,8 +1,8 @@
-#include "DPLLsolver_var1.h"
+#include "DPLLsolver_rand_var1.h"
 #include <fstream>
 
 // М0 - переменные с инверсией, М1 - без инверсии
-void DPLLsolver_var1::createKNFfromDIMACS(const std::string& DIMACS_filepath)
+void DPLLsolver_rand_var1::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 {
 	std::ifstream in(DIMACS_filepath);
 
@@ -46,9 +46,13 @@ void DPLLsolver_var1::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 		}
 	}
 	in.close();
+
+	choosequeue.resize(varCount);
+	for (int i = 0; i < varCount; choosequeue[i] = i, i++);
+	std::shuffle(choosequeue.begin(), choosequeue.end(), gen);
 }
 
-bool DPLLsolver_var1::backTrackAlg() 
+bool DPLLsolver_rand_var1::backTrackAlg()
 {
 	/*
 	* 1. возвращаем дизъюнкты из буферов
@@ -69,7 +73,7 @@ bool DPLLsolver_var1::backTrackAlg()
 			M0.insertRow(bufM0.extractRow(id), id);
 		}
 		stack_top.removed_clause_id.clear();
-		
+
 		V1 &= ~stack_top.V1;
 		V0 &= ~stack_top.V0;
 		result &= ~stack_top.V1;
@@ -132,46 +136,22 @@ bool DPLLsolver_var1::backTrackAlg()
 	}
 }
 
-bool DPLLsolver_var1::chooseVarAlg()
+bool DPLLsolver_rand_var1::chooseVarAlg()
 {
-	int maxWeight = 0;
 	int choosenVar = -1;
-	/*
-	* вычитание вектора из всех строк матрицы
-	*/
-	BoolMatrix buf1 = M1 - V0;
-	BoolMatrix buf0 = M0 - V1;
-	bool varVal;
 
-	for (int i = 0; i < varCount; i++)
+	for (int i = 0; i < varCount && choosenVar == -1; i++)
 	{
-		int M1ColumnWeight = 0;
-		int M0ColumnWeight = 0;
-
-		if (!V0[i] && !V1[i])
-		{
-			M1ColumnWeight = buf1.weightOfColumn(i);
-			M0ColumnWeight = buf0.weightOfColumn(i);
-		}
-
-		if (M1ColumnWeight > maxWeight || M0ColumnWeight > maxWeight)
-		{
-			if (M1ColumnWeight > M0ColumnWeight)
-			{
-				maxWeight = M1ColumnWeight;
-				varVal = true;
-			}
-			else
-			{
-				maxWeight = M0ColumnWeight;
-				varVal = false;
-			}
+		if (!result[i])
 			choosenVar = i;
-		}
 	}
 
 	if (choosenVar == -1)
 		return false;
+
+	bool varVal = true;
+	if (std::rand() % 1000 > 500)
+		varVal = false;
 
 	S.push(StackData());
 	StackData& stack_top = S.top();
@@ -218,7 +198,7 @@ bool DPLLsolver_var1::chooseVarAlg()
 	return true;
 }
 
-bool DPLLsolver_var1::deduceAlg()
+bool DPLLsolver_rand_var1::deduceAlg()
 {
 	/*
 	* цикл вынести в функцию
@@ -239,7 +219,7 @@ bool DPLLsolver_var1::deduceAlg()
 	return false;
 }
 
-bool DPLLsolver_var1::deduceM1(BoolMatrix& M1_, BoolMatrix& bufM1_, BoolVector& V1_, BoolMatrix& M0_, BoolMatrix& bufM0_, BoolVector& V0_, BoolVector& stackV, bool& changes)
+bool DPLLsolver_rand_var1::deduceM1(BoolMatrix& M1_, BoolMatrix& bufM1_, BoolVector& V1_, BoolMatrix& M0_, BoolMatrix& bufM0_, BoolVector& V0_, BoolVector& stackV, bool& changes)
 {
 
 	//ищем перемнные, которые можем зафиксировать

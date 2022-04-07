@@ -155,16 +155,20 @@
     <ClCompile Include="BoolMatrix.cpp" />
     <ClCompile Include="BoolVector.cpp" />
     <ClCompile Include="DPLLsolver.cpp" />
-    <ClCompile Include="DPLLsolver_var1.cpp" />
-    <ClCompile Include="DPLLsolver_var2.cpp" />
+    <ClCompile Include="DPLLsolver_greed_var1.cpp" />
+    <ClCompile Include="DPLLsolver_rand_var1.cpp" />
+    <ClCompile Include="DPLLsolver_rand_var2.cpp" />
+    <ClCompile Include="DPLLsolver_greed_var2.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoolMatrix.h" />
     <ClInclude Include="BoolVector.h" />
     <ClInclude Include="DPLLsolver.h" />
-    <ClInclude Include="DPLLsolver_var1.h" />
-    <ClInclude Include="DPLLsolver_var2.h" />
+    <ClInclude Include="DPLLsolver_greed_var1.h" />
+    <ClInclude Include="DPLLsolver_rand_var1.h" />
+    <ClInclude Include="DPLLsolver_rand_var2.h" />
+    <ClInclude Include="DPLLsolver_greed_var2.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input.txt" />

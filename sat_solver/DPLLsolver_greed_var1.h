@@ -6,12 +6,12 @@
 #include "BoolMatrix.h"
 
 
-class DPLLsolver_var1 : public DPLLsolver
+class DPLLsolver_greed_var1 : public DPLLsolver
 {
 public:
-	DPLLsolver_var1() = default;
+	DPLLsolver_greed_var1() = default;
 
-	~DPLLsolver_var1() = default;
+	~DPLLsolver_greed_var1() = default;
 
 private:
 	struct StackData

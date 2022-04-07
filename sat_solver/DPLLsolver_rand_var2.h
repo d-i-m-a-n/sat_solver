@@ -2,17 +2,18 @@
 #include <vector>
 #include <stack>
 #include <map>
+#include <random>
 
 #include "DPLLsolver.h"
 #include "BoolMatrix.h"
 
-class DPLLsolver_var2 :
+class DPLLsolver_rand_var2 :
     public DPLLsolver
 {
 public:
-	DPLLsolver_var2() = default;
+	DPLLsolver_rand_var2() : gen(rd()){}
 
-	~DPLLsolver_var2();
+	~DPLLsolver_rand_var2() = default;
 
 private:
 	struct StackData
@@ -69,6 +70,9 @@ private:
 	std::vector<int> weightOfColumnsM0;
 	std::vector<int> weightOfColumnsM1;
 
+	std::vector<int> choosequeue;
 
+	std::random_device rd;
+	std::mt19937 gen;
 };
 

@@ -1,21 +1,12 @@
-#include "DPLLsolver_var2.h"
+#include "DPLLsolver_greed_var2.h"
 #include <fstream>
 
-DPLLsolver_var2::~DPLLsolver_var2()
+DPLLsolver_greed_var2::~DPLLsolver_greed_var2()
 {
-	/*while (!M0.empty())
-	{
-		delete[] M0.back();
-		M0.pop_back();
-	}
-	while (!M1.empty())
-	{
-		delete[] M1.back();
-		M1.pop_back();
-	}*/
+
 }
 
-bool DPLLsolver_var2::backTrackAlg()
+bool DPLLsolver_greed_var2::backTrackAlg()
 {
 	while (true)
 	{
@@ -94,7 +85,7 @@ bool DPLLsolver_var2::backTrackAlg()
 	return true;
 }
 
-void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
+void DPLLsolver_greed_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 {
 	std::ifstream in(DIMACS_filepath);
 
@@ -156,7 +147,7 @@ void DPLLsolver_var2::createKNFfromDIMACS(const std::string& DIMACS_filepath)
 	in.close();
 }
 
-bool DPLLsolver_var2::chooseVarAlg()
+bool DPLLsolver_greed_var2::chooseVarAlg()
 {
 	int maxWeight = 0;
 	int choosenVar = -1;
@@ -194,7 +185,7 @@ bool DPLLsolver_var2::chooseVarAlg()
 	return true;
 }
 
-bool DPLLsolver_var2::deduceAlg()
+bool DPLLsolver_greed_var2::deduceAlg()
 {
 	// проверяем дизъюнкты в которых осталась 1 переменная
 
@@ -245,7 +236,7 @@ bool DPLLsolver_var2::deduceAlg()
 	return false;
 }
 
-void DPLLsolver_var2::setVarVal(int var, bool varVal)
+void DPLLsolver_greed_var2::setVarVal(int var, bool varVal)
 {
 	result[var] = 1;
 	StackData& stack_top = S.top();

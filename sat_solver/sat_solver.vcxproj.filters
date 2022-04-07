@@ -24,13 +24,19 @@
     <ClCompile Include="BoolMatrix.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DPLLsolver_var1.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="DPLLsolver.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="DPLLsolver_var2.cpp">
+    <ClCompile Include="DPLLsolver_greed_var1.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="DPLLsolver_rand_var2.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="DPLLsolver_greed_var2.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="DPLLsolver_rand_var1.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +47,19 @@
     <ClInclude Include="BoolMatrix.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DPLLsolver_var1.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="DPLLsolver.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="DPLLsolver_var2.h">
+    <ClInclude Include="DPLLsolver_greed_var1.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="DPLLsolver_rand_var2.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="DPLLsolver_greed_var2.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="DPLLsolver_rand_var1.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
