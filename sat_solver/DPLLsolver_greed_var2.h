@@ -39,9 +39,13 @@ private:
 
 	void createKNFfromDIMACS(const std::string& DIMACS_filepath);
 
+	bool checkMatrix();
+
 	bool chooseVarAlg();
 
 	bool deduceAlg();
+
+	void findCoverage(BoolMatrix& M, std::vector<int>& weightOfColumns, std::vector<std::vector<int>>& vars_in_clauses);
 
 	void setVarVal(int var, bool varVal);
 
@@ -50,12 +54,16 @@ private:
 
 	// дизъюнкты с одной оставшейся переменной
 	std::vector<int> clause_weight1_id;
+
 	// представление матрицы
 	BoolMatrix bufM1;
 	BoolMatrix bufM0;
 
 	BoolMatrix M1;
 	BoolMatrix M0;
+
+	std::map<int, bool> positive_vectors;
+	std::map<int, bool> negative_vectors;
 
 	// зафиксированные переменные
 	BoolVector V0;

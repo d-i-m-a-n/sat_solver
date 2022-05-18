@@ -65,7 +65,6 @@ std::istream& operator >> (std::istream& in, BoolVector::bitK& obj)
 
 BoolVector::BoolVector()
 {
-	
 	len = 32;
 	size = 1;
 	if (len % trailSize != 0)

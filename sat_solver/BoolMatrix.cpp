@@ -6,7 +6,14 @@ BoolMatrix::BoolMatrix()
 	columnCount = rowCount = 0;
 }
 
-BoolMatrix::BoolMatrix(int ROW, int COLUMN = 8)
+BoolMatrix::BoolMatrix(int rowsCount)
+{
+	rowCount = rowsCount;
+	matrix = new BoolVector * [rowCount];
+	for (int i = 0; i < rowCount; matrix[i] = nullptr, i++);
+}
+
+BoolMatrix::BoolMatrix(int ROW, int COLUMN)
 {
 	matrix = nullptr;
 	columnCount = rowCount = 0;
@@ -302,9 +309,11 @@ BoolVector BoolMatrix::disjuncionAllRows()
 	return res;
 }
 
-BoolVector*&& BoolMatrix::extractRow(int pos)
+BoolVector* BoolMatrix::extractRow(int pos)
 {
-	return std::move(matrix[pos]);
+	BoolVector* res = matrix[pos];
+	matrix[pos] = nullptr;
+	return res;
 }
 
 void BoolMatrix::set0InRangeOfRow(int beg, int Len, int N)
@@ -322,12 +331,11 @@ void BoolMatrix::inversionInRangeOfRow(int beg, int Len, int N)
 	matrix[N]->InversionInRange(beg, Len);
 }
 
-void BoolMatrix::insertRow(BoolVector*&& vec, int pos)
+void BoolMatrix::insertRow(BoolVector* vec, int pos)
 {
 	if (matrix[pos])
 		delete matrix[pos];
 	matrix[pos] = vec;
-	vec = nullptr;
 }
 
 void BoolMatrix::resize(int rows, int columns)
@@ -401,6 +409,20 @@ BoolMatrix BoolMatrix::operator - (BoolVector& vector)
 	return res;
 }
 
+BoolMatrix BoolMatrix::operator+(BoolMatrix& matrix_)
+{
+	int resRowsCount = matrix_.getRowsCount() + rowCount;
+	BoolMatrix result(resRowsCount);
+	int i = 0;
+	for (; i < rowCount; i++)
+		result.insertRow(this->operator[](i), i);
+
+	for (int k = 0; i < resRowsCount;k++, i++)
+		result.insertRow(matrix_[k], i);
+	result.columnCount = columnCount;
+	return result;
+}
+
 int BoolMatrix::getRowsCount()
 {
 	return rowCount;
@@ -450,6 +472,9 @@ std::istream& operator >> (std::istream& in, BoolMatrix& obj)
 std::ostream& operator << (std::ostream& out, BoolMatrix& obj)
 {
 	for (int i = 0; i < obj.rowCount; i++)
-		out << *obj.matrix[i] << std::endl;
+		if (obj.matrix[i])
+			out << *obj.matrix[i] << std::endl;
+		else
+			out << "no row\n";
 	return out;
 }

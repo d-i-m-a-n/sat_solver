@@ -2,12 +2,16 @@
 #include <string>
 #include "BoolVector.h"
 
+class DPLLsolver;
+
 class BoolMatrix
 {
 public:
 	BoolMatrix();
 
-	explicit BoolMatrix(int, int);
+	BoolMatrix(int rowsCount);
+
+	explicit BoolMatrix(int rowsCount, int columnsCount);
 
 	BoolMatrix(char**, int, int);
 
@@ -23,7 +27,7 @@ public:
 
 	BoolVector disjuncionAllRows();
 
-	BoolVector*&& extractRow(int pos);
+	BoolVector* extractRow(int pos);
 
 	int getRowsCount();
 
@@ -31,7 +35,7 @@ public:
 
 	void inversionInRangeOfRow(int, int, int);
 
-	void insertRow(BoolVector*&& vec, int pos);
+	void insertRow(BoolVector* vec, int pos);
 
 	void resize(int rows, int columns = 0);
 
@@ -45,7 +49,9 @@ public:
 
 	int weight();
 
-	BoolMatrix operator - (BoolVector & vector);
+	BoolMatrix operator - (BoolVector& vector);
+
+	BoolMatrix operator + (BoolMatrix& matrix);
 
 	BoolMatrix& operator = (BoolMatrix&);
 
@@ -78,5 +84,6 @@ private:
 	BoolVector** matrix;
 	int rowCount;
 	int columnCount;
+
 };
 

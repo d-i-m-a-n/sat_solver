@@ -35,7 +35,7 @@ void run_test(DPLLsolver* solver, std::filesystem::path& test_dir_path, std::str
 
 		for (auto& file : std::filesystem::directory_iterator(entry.path()))
 		{
-			// выводит в консоль какой тест сейчас обрабатывается
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			std::cout << file.path().string() + '\n';
 			if ((*solver).solve(file.path().string(), result, time) != SAT)
 			{
@@ -56,33 +56,19 @@ void run_test(DPLLsolver* solver, std::filesystem::path& test_dir_path, std::str
 
 int main()
  {
-	// путь до папки с тестовыми папками
+	// пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	std::filesystem::path sat_tests_dp = std::filesystem::current_path() / "test" / "SAT";
 	std::filesystem::path unsat_tests_dp = std::filesystem::current_path() / "test" / "UNSAT";
 
-	// запись результатов
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	std::string sat_tests_out("./TESTS_RESULT/SAT_TESTS_WITH_RANK2.txt");
 	std::string unsat_tests_out("./TESTS_RESULT/UNSAT_TESTS_WITH_RANK2.txt");
 
 	{
-		DPLLsolver_rand_var2 solver_rand_var2;
-		run_test(&solver_rand_var2, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_rand_var2.txt", true);
-		//run_test(&solver_rand_var2, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_rand_var2.txt", false);
-	}
-	/*{
 		DPLLsolver_greed_var2 solver_greed_var2;
 		run_test(&solver_greed_var2, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_greed_var2.txt", true);
-		run_test(&solver_greed_var2, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_greed_var2.txt", false);
-	}*/
-	//{
-	//	DPLLsolver_greed_var1 solver_greed_var1;
-	//	//run_test(&solver_greed_var1, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_greed_var1.txt", true);
-	//	run_test(&solver_greed_var1, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_greed_var1.txt", false);
-	//}
-	//{
-	//	DPLLsolver_rand_var1 solver_rand_var1;
-	//	run_test(&solver_rand_var1, sat_tests_dp, "./TESTS_RESULT/SAT_TESTS_rand_var1.txt", true);
-	//	run_test(&solver_rand_var1, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_rand_var1.txt", false);
-	//}
+		//run_test(&solver_greed_var2, unsat_tests_dp, "./TESTS_RESULT/UNSAT_TESTS_greed_var2.txt", false);
+	}
+	
 	return 0;
 }
