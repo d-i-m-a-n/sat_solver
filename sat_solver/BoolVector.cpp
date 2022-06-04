@@ -498,6 +498,17 @@ BoolVector& BoolVector::operator |= (BoolVector& obj)
 	throw "different length";
 }
 
+BoolVector& BoolVector::operator |= (BoolVector&& obj)
+{
+	if (len == obj.len)
+	{
+		for (int i = 0; i < size; bits[i] |= obj.bits[i], i++);
+
+		return *this;
+	}
+	throw "different length";
+}
+
 BoolVector BoolVector::operator ^ (BoolVector& obj)
 {
 	if (len == obj.len)
@@ -742,8 +753,32 @@ BoolVector::operator std::string()
 std::ostream& operator << (std::ostream& out, BoolVector& obj)
 {
 	int p = obj.len % obj.trailSize;
-	int i = obj.size - 1;
+	int border = obj.size;
+	if(p)
+	 border --;
+
+	for (int i = 0; i < border; i++)
+	{
+		uc mask = 1;
+		for (int j = 0; j < obj.trailSize; j++, mask <<= 1)
+			if (obj.bits[i] & mask)
+				std::cout << '1';
+			else
+				std::cout << '0';
+	}
+
 	if (p)
+	{
+		uc mask = 1;
+		for (int i = 0; i < p; i++, mask <<= 1)
+			if (obj.bits[border] & mask)
+				std::cout << '1';
+			else
+				std::cout << '0';
+	}
+
+
+	/*if (p)
 	{
 		uc mask = 1 << (p - 1);
 		for (int j = 0; j < p; j++, mask >>= 1)
@@ -762,7 +797,7 @@ std::ostream& operator << (std::ostream& out, BoolVector& obj)
 				std::cout << '1';
 			else
 				std::cout << '0';
-	}
+	}*/
 
 	return out;
 }

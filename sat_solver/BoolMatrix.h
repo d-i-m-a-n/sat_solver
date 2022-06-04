@@ -21,6 +21,8 @@ public:
 
 	~BoolMatrix();
 
+	void addRow(BoolVector*& vector);
+
 	void clear ();
 
 	BoolVector conjuctionAllRows();
