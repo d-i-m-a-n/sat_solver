@@ -821,7 +821,7 @@ bool CDCLsolver::solve(const std::string& DIMACS_filepath, BoolVector& result_, 
 		{
 			time = clock() - beg;
 
-			std::cout << V0 << ' ' << V1 << std::endl;
+			//std::cout << V0 << ' ' << V1 << std::endl;
 
 			result_ = std::move(result);
 			return true;

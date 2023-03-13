@@ -3,8 +3,6 @@
 #include <fstream>
 #include <stack>
 
-#include "SortingVector.h"
-
 bool debug_mode = false;
 
 CDCLsolver_opt::ImplicationGraph::MainNode::MainNode()
@@ -1212,8 +1210,11 @@ bool CDCLsolver_opt::deduceAlg()
 	}
 	weightOfRows[clauseCount]++;
 
-	/*std::cout << "conflict var: " << conflict_var << std::endl;
-	std::cout << "learned clause: " << *learn_clause_V0 << " " << *learn_clause_V1 << std::endl;*/
+	if (debug_mode)
+	{
+		std::cout << "conflict var: " << conflict_var << std::endl;
+		std::cout << "learned clause: " << *learn_clause_V0 << " " << *learn_clause_V1 << std::endl;
+	}
 
 	if (backtrack_decision_level == 0)
 	{
@@ -1553,7 +1554,8 @@ bool CDCLsolver_opt::solve(const std::string& DIMACS_filepath, BoolVector& resul
 		{
 			time = clock() - beg;
 			
-			//std::cout << V0 << ' ' << V1 << std::endl;
+			if(debug_mode)
+				std::cout << V0 << ' ' << V1 << std::endl;
 
 			result_ = std::move(result);
 			return true;
