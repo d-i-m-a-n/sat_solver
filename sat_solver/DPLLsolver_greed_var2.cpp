@@ -172,7 +172,7 @@ void DPLLsolver_greed_var2::createKNFfromDIMACS(const std::string& DIMACS_filepa
 	}
 	in.close();
 
-	std::cout << M0 << std::endl << M1 << std::endl;
+	//std::cout << M0 << std::endl << M1 << std::endl;
 }
 
 bool DPLLsolver_greed_var2::checkMatrix()
@@ -290,7 +290,7 @@ bool DPLLsolver_greed_var2::chooseVarAlg()
 
 	if (choosenVar == -1)
 	{
-		std::cout << V0 << ' ' << V1 << std::endl;
+		//std::cout << V0 << ' ' << V1 << std::endl;
 		return false;
 	}
 	S.push(StackData());
@@ -529,7 +529,7 @@ void DPLLsolver_greed_var2::setVarVal(int var, bool varVal)
 		}
 	}
 
-	std::cout << "Fixed var: " << var << " valuse: " << varVal << std::endl;
-	std::cout << M0 << std::endl << M1 << std::endl;
+	//std::cout << "Fixed var: " << var << " valuse: " << varVal << std::endl;
+	//std::cout << M0 << std::endl << M1 << std::endl;
 
 }

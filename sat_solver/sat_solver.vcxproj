@@ -156,6 +156,8 @@
   <ItemGroup>
     <ClCompile Include="BoolMatrix.cpp" />
     <ClCompile Include="BoolVector.cpp" />
+    <ClCompile Include="CDCLsolver.cpp" />
+    <ClCompile Include="CDCLsolver_opt.cpp" />
     <ClCompile Include="DPLLsolver.cpp" />
     <ClCompile Include="DPLLsolver_greed_var1.cpp" />
     <ClCompile Include="DPLLsolver_rand_var1.cpp" />
@@ -168,6 +170,8 @@
   <ItemGroup>
     <ClInclude Include="BoolMatrix.h" />
     <ClInclude Include="BoolVector.h" />
+    <ClInclude Include="CDCLsolver.h" />
+    <ClInclude Include="CDCLsolver_opt.h" />
     <ClInclude Include="DPLLsolver.h" />
     <ClInclude Include="DPLLsolver_greed_var1.h" />
     <ClInclude Include="DPLLsolver_rand_var1.h" />

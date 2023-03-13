@@ -86,6 +86,8 @@ public:
 
 	BoolVector& operator |= (BoolVector& obj);
 
+	BoolVector& operator |= (BoolVector&& obj);
+
 	BoolVector operator ^ (BoolVector& obj);
 
 	BoolVector& operator ^= (BoolVector& obj);

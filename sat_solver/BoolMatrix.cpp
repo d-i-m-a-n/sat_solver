@@ -86,6 +86,18 @@ BoolMatrix::~BoolMatrix()
 	columnCount = 0;
 }
 
+void BoolMatrix::addRow(BoolVector*& vector)
+{
+	BoolVector** new_matrix = new BoolVector * [rowCount + 1];
+
+	for (int i = 0; i < rowCount; new_matrix[i] = matrix[i], i++);
+	new_matrix[rowCount] = vector;
+	rowCount++;
+
+	delete[] matrix;
+	matrix = new_matrix;
+}
+
 void BoolMatrix::clear()
 {
 	for (int i = 0; i < rowCount; i++)
